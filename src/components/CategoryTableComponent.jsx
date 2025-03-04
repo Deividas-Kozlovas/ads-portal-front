@@ -8,16 +8,25 @@ const CategoryTableComponent = () => {
   const { categories, loading, error } = useCategories();
   const [deleteError, setDeleteError] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const navigate = useNavigate();
 
   const handleDelete = async (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       setDeleteLoading(true);
       try {
-        await axiosInstance.delete(`/category/${categoryId}`);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setDeleteError("No token found, please login.");
+          return;
+        }
+
+        await axiosInstance.delete(`/category/${categoryId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setDeleteError(null);
-
         navigate(0);
       } catch (err) {
         console.error(err);
@@ -33,7 +42,7 @@ const CategoryTableComponent = () => {
   }
 
   return (
-    <div>
+    <div className="pt-4">
       <h2>Categories</h2>
       {error && <Alert variant="danger">{error}</Alert>}
       {deleteError && <Alert variant="danger">{deleteError}</Alert>}

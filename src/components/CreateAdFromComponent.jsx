@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useCategories } from "../context/CategoryContext";
 import axiosInstance from "../services/axiosInstance";
 
-const CreateAddFromComponent = () => {
+const CreateAddFormComponent = () => {
   const { categories } = useCategories();
   const [formData, setFormData] = useState({
     title: "",
@@ -37,7 +37,18 @@ const CreateAddFromComponent = () => {
 
     try {
       setLoading(true);
-      const response = await axiosInstance.post("ads", formData);
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("No token found, please login.");
+        return;
+      }
+
+      const response = await axiosInstance.post("ads", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.data) {
         setError("");
@@ -154,4 +165,4 @@ const CreateAddFromComponent = () => {
   );
 };
 
-export default CreateAddFromComponent;
+export default CreateAddFormComponent;

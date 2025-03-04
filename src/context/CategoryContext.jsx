@@ -18,7 +18,19 @@ export const CategoryProvider = ({ children }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axiosInstance.get("/category");
+        const token = localStorage.getItem("token"); // Get the token from localStorage
+        if (!token) {
+          setError("No token found, please login.");
+          return;
+        }
+
+        // Include the token in the Authorization header
+        const response = await axiosInstance.get("/category", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         if (response.data.status === "success") {
           const cats = response.data.data.categories;
           if (cats.length === 0) {

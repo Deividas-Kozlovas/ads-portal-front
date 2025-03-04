@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 const NavigationComponent = () => {
   const navigate = useNavigate();
 
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -17,7 +19,11 @@ const NavigationComponent = () => {
         <Navbar.Brand href="/">Home</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto"></Nav>
+          <Nav className="me-auto">
+            {loggedUser && loggedUser.isAdmin && (
+              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+            )}
+          </Nav>
           <Nav className="ml-auto">
             <Button variant="outline-light" onClick={handleLogout}>
               Logout

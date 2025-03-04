@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../services/axiosInstance";
 
 const CreateCategoryForm = () => {
@@ -8,7 +8,7 @@ const CreateCategoryForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setCategoryTitle(event.target.value);
@@ -25,9 +25,21 @@ const CreateCategoryForm = () => {
     setError("");
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/category", {
-        title: categoryTitle,
-      });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("No token found, please login.");
+        return;
+      }
+
+      const response = await axiosInstance.post(
+        "/category",
+        { title: categoryTitle },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.data) {
         setCategoryTitle("");
@@ -35,8 +47,7 @@ const CreateCategoryForm = () => {
       }
       setLoading(false);
 
-      // After successfully creating the category, reload the page
-      navigate(0); // This reloads the current page
+      navigate(0);
     } catch (error) {
       console.error("Error:", error);
       if (error.response) {

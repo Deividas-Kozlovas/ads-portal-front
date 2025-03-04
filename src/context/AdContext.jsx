@@ -37,7 +37,7 @@ export const AdProvider = ({ children }) => {
   }, []);
 
   return (
-    <AdContext.Provider value={{ ads, loading, error }}>
+    <AdContext.Provider value={{ ads, loading, error, setAds }}>
       {children}
     </AdContext.Provider>
   );

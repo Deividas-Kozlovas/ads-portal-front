@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AdCardComponent from "../components/AdCardComponent";
+import { Container } from "react-bootstrap";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -14,7 +16,9 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1>Welcome to the Home Page!</h1>
+      <Container className="pt-5">
+        <AdCardComponent />
+      </Container>
     </div>
   );
 };
