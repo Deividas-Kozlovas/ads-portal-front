@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext } from "react";
 import axiosInstance from "../services/axiosInstance";
 
@@ -10,18 +11,17 @@ export const AdCommentProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Function to fetch comments for a specific ad based on adId
   const fetchCommentsForAd = async (adId) => {
-    setLoading(true); // Set loading to true before making the API call
-    setError(null); // Clear any previous errors
+    setLoading(true);
+    setError(null);
     try {
-      const response = await axiosInstance.get(`/ad-comment/${adId}`); // Updated URL to match API route
-      setComments(response.data.data.allAdComments); // Save the comments from the API response
+      const response = await axiosInstance.get(`/ad-comment/${adId}`);
+      setComments(response.data.data.allAdComments);
     } catch (err) {
       console.error("Error fetching comments:", err);
-      setError(err?.response?.data?.message || "Failed to load comments"); // Use error message from the server if available
+      setError(err?.response?.data?.message || "Failed to load comments");
     } finally {
-      setLoading(false); // Set loading to false after the API call finishes
+      setLoading(false);
     }
   };
 
@@ -34,7 +34,6 @@ export const AdCommentProvider = ({ children }) => {
   );
 };
 
-// Custom hook to access the context
 export const useAdComments = () => {
   const context = useContext(AdCommentContext);
   if (!context) {

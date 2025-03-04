@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../services/axiosInstance";
 
 const AdCardComponent = () => {
-  const { ads, loading, error, setAds } = useAds();
+  const { ads, loading, error } = useAds();
   const { categories } = useCategories();
   const [likeLoading, setLikeLoading] = useState(false);
   const [likeError, setLikeError] = useState(null);
@@ -28,20 +28,13 @@ const AdCardComponent = () => {
         user: loggedUser.id,
       };
 
-      const response = await axiosInstance.post("/like-ad", payload, {
+      await axiosInstance.post("/like-ad", payload, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      if (response.data.status === "success") {
-        setLikeError(null);
-        setAds((prevAds) =>
-          prevAds.map((ad) =>
-            ad._id === adId ? { ...ad, likes: response.data.data.likes } : ad
-          )
-        );
-      }
+      navigator(0);
     } catch (err) {
       console.error(err);
       setLikeError("Failed to like ad.");
@@ -62,10 +55,11 @@ const AdCardComponent = () => {
       <Row>
         {Array.isArray(ads) && ads.length > 0 ? (
           ads.map((ad) => {
+            const likes = Array.isArray(ad.likes) ? ad.likes : [];
+
             const hasLiked =
-              ad.likes &&
-              loggedUser &&
-              ad.likes.some((like) => like.user === loggedUser.id);
+              loggedUser && likes.some((like) => like.user === loggedUser.id);
+
             return (
               <Col key={ad._id} md={4} className="mb-4">
                 <Card>
