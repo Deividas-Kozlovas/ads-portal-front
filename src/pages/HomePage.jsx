@@ -1,13 +1,21 @@
-import React from "react";
-import RegisterPage from "../pages/RegisterPage";
-import LoginPage from "./LoginPage";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   return (
-    <>
-      <RegisterPage />
-      <LoginPage />
-    </>
+    <div>
+      <h1>Welcome to the Home Page!</h1>
+    </div>
   );
 };
 

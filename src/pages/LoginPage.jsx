@@ -31,10 +31,24 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-      await axiosInstance.post("/user/login", { email, password });
+      const response = await axiosInstance.post("/user/login", {
+        email,
+        password,
+      });
+
+      if (response.data) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      }
+
       setError("");
       setLoading(false);
-      navigate("/dashboard");
+
+      if (!response.data.user.isAdmin) {
+        navigate("/");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.error("Error:", error);
       if (error.response) {
@@ -91,7 +105,7 @@ const LoginPage = () => {
         <Row className="justify-content-center pt-2">
           <Col xs="auto">
             <p>
-              Dent have account{" "}
+              Don't have an account?{" "}
               <Link className="auth-form__switch" to="/register">
                 Register
               </Link>

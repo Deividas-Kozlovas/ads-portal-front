@@ -44,12 +44,17 @@ const Register = () => {
 
     try {
       setLoading(true);
-      await axiosInstance.post("/user/register", {
+      const response = await axiosInstance.post("/user/register", {
         name,
         email,
         password,
         passwordConfirm,
       });
+
+      if (response.data && response.data.data) {
+        localStorage.setItem("token", response.data.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      }
 
       setError("");
       setLoading(false);
